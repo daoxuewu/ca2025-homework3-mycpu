@@ -1,0 +1,54 @@
+[0m[[0m[0mdebug[0m] [0m[0mjavaOptions: Vector(-Duser.dir=/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle)[0m
+[0m[[0m[0mdebug[0m] [0m[0mForking tests - parallelism = false[0m
+[0m[[0m[0mdebug[0m] [0m[0mCreate a single-thread test executor[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunner for org.scalatest.tools.Framework produced 7 initial tasks for 7 tests.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.InstructionDecoderTest, sbt.ForkMain$SubclassFingerscan@569cfc36, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mInstructionDecoderTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mInstructionDecoder[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should decode RV32I instructions and generate correct control signals[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.ByteAccessTest, sbt.ForkMain$SubclassFingerscan@43bd930a, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mByteAccessTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mSingle Cycle CPU - Integration Tests[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should correctly handle byte-level store/load operations (SB/LB)[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.InstructionFetchTest, sbt.ForkMain$SubclassFingerscan@33723e30, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mInstructionFetchTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mInstructionFetch[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should correctly update PC and handle jumps[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.ExecuteTest, sbt.ForkMain$SubclassFingerscan@64f6106c, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mExecuteTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mExecute[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should execute ALU operations and branch logic correctly[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.FibonacciTest, sbt.ForkMain$SubclassFingerscan@553a3d88, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mFibonacciTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mSingle Cycle CPU - Integration Tests[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should correctly execute recursive Fibonacci(10) program[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.RegisterFileTest, sbt.ForkMain$SubclassFingerscan@7a30d1e6, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mRegisterFileTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mRegisterFile[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should correctly read previously written register values[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should keep x0 hardwired to zero (RISC-V compliance)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should support write-through (read during write cycle)[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 3 events.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(riscv.singlecycle.QuicksortTest, sbt.ForkMain$SubclassFingerscan@5891e32e, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mQuicksortTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mSingle Cycle CPU - Integration Tests[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should correctly execute Quicksort algorithm on 10 numbers[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 1 events.[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 5 minutes, 4 seconds.[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 9[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 7, aborted 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 9, failed 0, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mAll tests passed.[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mPassed tests:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.InstructionDecoderTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.ByteAccessTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.InstructionFetchTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.ExecuteTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.FibonacciTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.RegisterFileTest[0m
+[0m[[0m[0mdebug[0m] [0m[0m	riscv.singlecycle.QuicksortTest[0m

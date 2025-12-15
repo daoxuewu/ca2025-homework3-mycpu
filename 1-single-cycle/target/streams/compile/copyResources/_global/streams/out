@@ -1,0 +1,4 @@
+[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/src/main/resources/fibonacci.asmbin,/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/target/scala-2.13/classes/fibonacci.asmbin)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/src/main/resources/quicksort.asmbin,/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/target/scala-2.13/classes/quicksort.asmbin)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/src/main/resources/sb.asmbin,/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/target/scala-2.13/classes/sb.asmbin)[0m

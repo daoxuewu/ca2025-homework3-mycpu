@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/mnt/c/Users/nsda/chisel-tutorial/ca2025-mycpu/1-single-cycle/src/main/scala/riscv/core/Execute.scala:143:55: value - is not a member of chisel3.internal.firrtl.Width[0m
+[0m[[0m[31merror[0m] [0m[0m  val jalrTarget   = Cat(jalrSum(Parameters.DataWidth - 1, 1), 0.U(1.W))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                      ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

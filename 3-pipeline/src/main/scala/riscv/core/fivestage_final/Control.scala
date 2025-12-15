@@ -104,11 +104,11 @@ class Control extends Module {
     // 3. AND destination register is not x0
     // 4. AND destination register conflicts with ID source registers
     //
-    ((?) && // Either:
-      // - Jump in ID needs register value, OR
-      // - Load in EX (load-use hazard)
-      ? =/= 0.U &&                                 // Destination is not x0
-      (?)) // Destination matches ID source
+    ((io.jump_instruction_id || io.memory_read_enable_ex) &&  // Either:
+                                                              // - Jump in ID needs register value, OR
+                                                              // - Load in EX (load-use hazard)
+      io.rd_ex =/= 0.U &&                                        // Destination is not x0
+      (io.rd_ex === io.rs1_id || io.rd_ex === io.rs2_id))           // Destination matches ID source
     //
     // Examples triggering Condition 1:
     // a) Jump dependency: ADD x1, x2, x3 [EX]; JALR x0, x1, 0 [ID] → stall
@@ -125,10 +125,10 @@ class Control extends Module {
         // 3. Destination register is not x0
         // 4. Destination register conflicts with ID source registers
         //
-        (? &&                              // Jump instruction in ID
-          ? &&                          // Load instruction in MEM
-          ? =/= 0.U &&                                  // Load destination not x0
-          (?)) // Load dest matches jump source
+        (io.jump_instruction_id &&                           // Jump instruction in ID
+          io.memory_read_enable_mem &&                       // Load instruction in MEM
+          io.rd_mem =/= 0.U &&                                  // Load destination not x0
+          (io.rd_mem === io.rs1_id || io.rd_mem === io.rs2_id))    // Load dest matches jump source
         //
         // Example triggering Condition 2:
         // LW x1, 0(x2) [MEM]; NOP [EX]; JALR x0, x1, 0 [ID]
@@ -140,9 +140,9 @@ class Control extends Module {
     // - Flush ID/EX register (insert bubble)
     // - Freeze PC (don't fetch next instruction)
     // - Freeze IF/ID (hold current fetch result)
-    io.id_flush := ?
-    io.pc_stall := ?
-    io.if_stall := ?
+    io.id_flush := true.B    // 把 ID/EX 變成泡泡（插入 NOP）
+    io.pc_stall := true.B    // PC 不更新
+    io.if_stall := true.B    // IF/ID 暫存（凍結 IF 結果）
 
   }.elsewhen(io.jump_flag) {
     // ============ Control Hazard (Branch Taken) ============
@@ -150,7 +150,7 @@ class Control extends Module {
     // Only flush IF stage (not ID) since branch resolved early
     // TODO: Which stage needs to be flushed when branch is taken?
     // Hint: Branch resolved in ID stage, discard wrong-path instruction
-    io.if_flush := ?
+    io.if_flush := true.B    // 丟掉已經抓錯路徑的那一條指令（IF/ID）
     // Note: No ID flush needed - branch already resolved in ID!
     // This is the key optimization: 1-cycle branch penalty vs 2-cycle
   }
@@ -162,23 +162,72 @@ class Control extends Module {
   // detection logic implemented above
   //
   // Q1: Why do we need to stall for load-use hazards?
-  // A: [Student answer here]
+    /* 
+    *  A: 
+    *  因為 load 指令的資料要到 MEM（甚至 WB）階段才真正準備好，
+    *  下一個 cycle 就在 EX/ID 階段用到它的指令，即使有 forwarding 也拿不到，會讀到舊值。
+    *  例如 : 
+    *  LW  x1, 0(x2)   // EX: 還在等 memory
+    *  ADD x3, x1, x4  // ID: 馬上就想用 x1
+    *  這時 x1 的正確值要等到 MEM 才出來，ID→EX 那一拍用不到
+    *  → 只能插一個 bubble，讓 pipeline 多等一個 cycle，資料 ready 再算。
+    */
   // Hint: Consider data dependency and forwarding limitations
   //
   // Q2: What is the difference between "stall" and "flush" operations?
-  // A: [Student answer here]
+  /* 
+  *  A:
+  * stall（停住）：
+      凍結 PC、IF/ID 等 pipeline register
+      指令留在原本的 stage，不往前推進
+      用來「等資料就緒」，不丟掉現有指令，只是暫停。
+      例如 : pc_stall := true、if_stall := true、id_flush := true（插泡泡＋不往前走）
+
+  * flush（清空）：
+      把某個 stage 的內容直接「清成 NOP」
+      相當於插入泡泡，把那條指令當作不存在
+      通常用在：已經確定走錯路徑的指令（錯誤 branch path）要被丟掉。
+      例如 : if_flush := true（把 IF/ID 那條錯路徑指令干掉）
+  */ 
   // Hint: Compare their effects on pipeline registers and PC
   //
   // Q3: Why does jump instruction with register dependency need stall?
-  // A: [Student answer here]
+  // A: 像 JALR 這種 jump target = rs1 + imm，
+  //    必須先拿到 正確的 rs1 值 才能算出「要跳去哪裡」。
   // Hint: When is jump target address available?
   //
   // Q4: In this design, why is branch penalty only 1 cycle instead of 2?
-  // A: [Student answer here]
+  // A: 因為這個版本的設計是 在 ID 階段就把 branch/jump 解析完（early branch resolution），
+  // 不是等到 EX 才知道要不要跳。
+  /*
+    branch resolved in EX 的情況：
+      當 branch 被判定「taken」時：
+        IF：已經抓了第 1 條錯路徑
+        ID：也已經拿到第 2 條錯路徑
+        → 至少要 flush 2 個 stage → 2-cycle penalty。
+
+    現在這版：branch 在 ID 就算完，jump_flag 在 ID 發出：
+      當 jump_flag 為真：
+        IF：那一拍剛抓到的指令是錯路徑 → if_flush := true.B 丟掉
+        ID：就是當下這條 branch，本身會被正常執行
+        → 只 flush IF：1-cycle penalty。
+  */
   // Hint: Compare ID-stage vs EX-stage branch resolution
   //
   // Q5: What would happen if we removed the hazard detection logic entirely?
-  // A: [Student answer here]
+  // A: 會出現各種「看起來有在跑，但結果全部是錯的」情況，data hazard 和 control hazard 不處理都會破壞程式語意
+  /*
+  * data hazard 不處理：
+      下一條指令用到前一條還沒寫回的暫存器
+      讀到舊值 → 算出錯的結果 → 錯誤會一路 propagate
+
+  * control hazard 不處理：
+      branch/jump 決定之後，錯路徑指令沒有被 flush
+      這些指令可能：
+        寫 register
+        存 memory
+      導致執行順序跟 RISC-V ISA 規範完全不符
+  */
   // Hint: Consider data hazards and control flow correctness
   //
   // Q6: Complete the stall condition summary:
@@ -188,5 +237,5 @@ class Control extends Module {
   //
   // Flush is needed when:
   // 1. ? (Branch/Jump condition)
-  //
+  // A: Answer in hackmd
 }
